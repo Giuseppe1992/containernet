@@ -67,3 +67,10 @@
      tags:
         - notindocker
         - nopull
+
+   - name: import hadoop-worker
+     raw: docker import /root/docker-worker.tar.gz
+
+
+   - name: import hadoop-worker
+     raw: docker import /root/docker-master.tar.gz
