@@ -68,9 +68,9 @@
         - notindocker
         - nopull
 
-   - name: import hadoop-worker
-     raw: docker import /root/docker-worker.tar.gz
+   - name: download docker recepies
+     get_url:
+        url : http://public.nancy.grid5000.fr/~gidilena/zip.zip
+        dest: ~/zip.zip
+        mode: 0666
 
-
-   - name: import hadoop-worker
-     raw: docker import /root/docker-master.tar.gz
