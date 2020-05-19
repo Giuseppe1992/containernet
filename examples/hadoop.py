@@ -27,13 +27,16 @@ for s1,s2 in zip(switches[:-1],switches[1:]):
 
 info('*** Starting network\n')
 net.start()
-for host in docker_hosts:
-    host.cmd("service ssh start")
+
 
 master = docker_hosts[0]
 workers = docker_hosts[1:]
 
-master.cmd("""bash -c "echo '127.0.0.1 master ' >> /etc/hosts" """)
+#   StrictHostKeyChecking no
+master.cmd("""bash -c "echo '    StrictHostKeyChecking no' >> /etc/ssh/ssh_config" """)
+for host in docker_hosts:
+    host.cmd("service ssh start")
+    host.cmd("""bash -c "echo '10.0.0.1 master ' >> /etc/hosts" """)
 
 for w in workers:
     ip = w.IP()
