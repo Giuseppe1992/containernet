@@ -49,6 +49,7 @@ for host in docker_hosts:
 for w in workers:
     ip = w.IP()
     master.cmd("""bash -c "echo '{}' >> /root/hadoop-2.7.6/etc/hadoop/slaves" """.format(ip))
+    w.cmd("""bash -c "echo '{}' >> /root/hadoop-2.7.6/etc/hadoop/slaves" """.format(ip))
 
 info ("# Start Hadoop in the cluster\n")
 info ("# Format HDFS\n")
