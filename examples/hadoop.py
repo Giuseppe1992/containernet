@@ -17,7 +17,7 @@ info('*** Adding docker containers\n')
 docker_hosts=[net.addDocker('d1', ip='10.0.0.1', dimage="master:latest")]
 switches = [net.addSwitch('s1')]
 net.addLink(docker_hosts[-1], switches[-1])
-for i in range(2,n_workers+1):
+for i in range(2,n_hosts+1):
     docker_hosts.append(net.addDocker('d{}'.format(i), ip='10.0.0.{}'.format(i), dimage="worker:latest"))
     switches.append(net.addSwitch('s{}'.format(i)))
     net.addLink(docker_hosts[-1], switches[-1])
