@@ -75,7 +75,7 @@
         mode: 0666
 
    - name: unzip the images
-     raw: unzip  ~/zip.zip
+     raw: unzip  ~/zip.zip -d /root/
 
    - name: build master
      raw: docker build -t master:latest /root/zip/DockerMaster/
