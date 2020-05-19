@@ -32,6 +32,9 @@ for host in docker_hosts:
 
 master = docker_hosts[0]
 workers = docker_hosts[1:]
+
+master.cmd("""bash -c "echo '127.0.0.1 master ' >> /etc/hosts" """)
+
 info('*** Running CLI\n')
 CLI(net)
 info('*** Stopping network')
