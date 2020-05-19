@@ -35,6 +35,10 @@ workers = docker_hosts[1:]
 
 master.cmd("""bash -c "echo '127.0.0.1 master ' >> /etc/hosts" """)
 
+for w in workers:
+    ip = w.IP()
+    master.cmd("""bash -c "echo '{}' >> /root/hadoop-2.7.6/etc/hadoop/slaves" """.format(ip))
+
 info('*** Running CLI\n')
 CLI(net)
 info('*** Stopping network')
