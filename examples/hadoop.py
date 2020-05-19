@@ -53,16 +53,15 @@ for w in workers:
 info ("# Start Hadoop in the cluster\n")
 info ("# Format HDFS\n")
 info (master.cmd('bash -c "/root/hadoop-2.7.6/bin/hdfs namenode -format -force"'))
-
+sleep(2)
 info ("# Launch HDFS\n")
 info (master.cmd('bash -c "/root/hadoop-2.7.6/sbin/start-dfs.sh"'))
-
+sleep(2)
 info ("# Launch YARN\n")
 info (master.cmd('bash -c "/root/hadoop-2.7.6/sbin/start-yarn.sh"'))
-
+sleep(2)
 info ("# Create a directory for the user\n")
 info (master.cmd('bash -c "/root/hadoop-2.7.6/bin/hdfs dfs -mkdir -p /user/root"'))
-
 sleep(1)
 
 info('*** Running CLI\n')
