@@ -42,9 +42,11 @@ workers = docker_hosts[1:]
 
 #   StrictHostKeyChecking no
 master.cmd("""bash -c "echo '    StrictHostKeyChecking no' >> /etc/ssh/ssh_config" """)
+master.cmd("""bash -c "echo '10.0.0.1' >> /root/hadoop-2.7.6/etc/hadoop/masters" """)
 for host in docker_hosts:
     host.cmd("service ssh start")
     host.cmd("""bash -c "echo '10.0.0.1 master ' >> /etc/hosts" """)
+
 
 w_ips=[]
 for w in workers:
@@ -53,10 +55,8 @@ for w in workers:
     master.cmd("""bash -c "echo '{}' >> /root/hadoop-2.7.6/etc/hadoop/slaves" """.format(ip))
 
 for wor in workers:
-    wor.cmd("""bash -c "echo localhost >> /root/hadoop-2.7.6/etc/hadoop/slaves" """.format(ip))
     for ip in w_ips:
-        if ip != wor.IP():
-            wor.cmd("""bash -c "echo '{}' >> /root/hadoop-2.7.6/etc/hadoop/slaves" """.format(ip))
+        wor.cmd("""bash -c "echo '{}' >> /root/hadoop-2.7.6/etc/hadoop/slaves" """.format(ip))
 
 info ("# Start Hadoop in the cluster\n")
 info ("# Format HDFS\n")
