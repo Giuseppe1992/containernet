@@ -8,24 +8,30 @@ from mininet.cli import CLI
 from mininet.link import TCLink
 from mininet.log import info, setLogLevel
 setLogLevel('info')
-
+n_hosts=10
+assert n_hosts > 1
 net = Containernet(controller=Controller)
 info('*** Adding controller\n')
 net.addController('c0')
 info('*** Adding docker containers\n')
-d1 = net.addDocker('d1', ip='10.0.0.251', dimage="master:latest")
-d2 = net.addDocker('d2', ip='10.0.0.252', dimage="worker:latest")
-info('*** Adding switches\n')
-s1 = net.addSwitch('s1')
-s2 = net.addSwitch('s2')
-info('*** Creating links\n')
-net.addLink(d1, s1)
-net.addLink(s1, s2, cls=TCLink, delay='1ms', bw=100)
-net.addLink(s2, d2)
+docker_hosts=[net.addDocker('d1', ip='10.0.0.1', dimage="master:latest")]
+switches = [net.addSwitch('s1')]
+net.addLink(docker_hosts[-1], switches[-1])
+for i in range(2,n_workers+1):
+    docker_hosts.append(net.addDocker('d{}'.format(i), ip='10.0.0.{}'.format(i), dimage="worker:latest"))
+    switches.append(net.addSwitch('s{}'.format(i)))
+    net.addLink(docker_hosts[-1], switches[-1])
+info('*** Creating switch links\n')
+for s1,s2 in zip(switches[:-1],switches[1:]):
+    net.addLink(s1, s2, cls=TCLink, bw=100)
+
 info('*** Starting network\n')
 net.start()
-info('*** Testing connectivity\n')
-net.ping([d1, d2])
+for host in docker_hosts:
+    host.cmd("service ssh start")
+
+master = docker_hosts[0]
+workers = docker_hosts[1:]
 info('*** Running CLI\n')
 CLI(net)
 info('*** Stopping network')
