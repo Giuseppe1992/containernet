@@ -7,6 +7,7 @@ from mininet.node import Controller
 from mininet.cli import CLI
 from mininet.link import TCLink
 from mininet.log import info, setLogLevel
+from time import sleep
 setLogLevel('info')
 n_hosts=10
 assert n_hosts > 1
@@ -47,6 +48,21 @@ for host in docker_hosts:
 for w in workers:
     ip = w.IP()
     master.cmd("""bash -c "echo '{}' >> /root/hadoop-2.7.6/etc/hadoop/slaves" """.format(ip))
+
+info ("# Start Hadoop in the cluster\n")
+info ("# Format HDFS\n")
+info (master.cmd('bash -c "/root/hadoop-2.7.6/bin/hdfs namenode -format -force"'))
+
+info ("# Launch HDFS\n")
+info (master.cmd('bash -c "/root/hadoop-2.7.6/sbin/start-dfs.sh"'))
+
+info ("# Launch YARN\n")
+info (master.cmd('bash -c "/root/hadoop-2.7.6/sbin/start-yarn.sh"'))
+
+info ("# Create a directory for the user\n")
+info (master.cmd('bash -c "/root/hadoop-2.7.6/bin/hdfs dfs -mkdir -p /user/root"'))
+
+sleep(1)
 
 info('*** Running CLI\n')
 CLI(net)
