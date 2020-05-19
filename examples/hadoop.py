@@ -14,16 +14,22 @@ net = Containernet(controller=Controller)
 info('*** Adding controller\n')
 net.addController('c0')
 info('*** Adding docker containers\n')
-docker_hosts=[net.addDocker('d1', ip='10.0.0.1', dimage="master:latest")]
+
+docker_hosts=[net.addDocker('d1', ip='10.0.0.1', dimage="master:latest",cpuset_cpus="0,1")]
 switches = [net.addSwitch('s1')]
 net.addLink(docker_hosts[-1], switches[-1])
+cpu_set=(2, 3)
 for i in range(2,n_hosts+1):
-    docker_hosts.append(net.addDocker('d{}'.format(i), ip='10.0.0.{}'.format(i), dimage="worker:latest"))
+    docker_hosts.append(net.addDocker('d{}'.format(i), ip='10.0.0.{}'.format(i),
+                                      dimage="worker:latest",cpuset_cpus="{},{}".format(cpu_set[0],cpu_set[1])))
     switches.append(net.addSwitch('s{}'.format(i)))
     net.addLink(docker_hosts[-1], switches[-1])
+    cpu_set = cpu_set[0]+2,cpu_set[1]+2
+    if cpu_set[1] > 35:
+        cpu_set = (0, 1)
 info('*** Creating switch links\n')
 for s1,s2 in zip(switches[:-1],switches[1:]):
-    net.addLink(s1, s2, cls=TCLink, bw=100)
+    net.addLink(s1, s2, cls=TCLink, bw=1000)
 
 info('*** Starting network\n')
 net.start()
