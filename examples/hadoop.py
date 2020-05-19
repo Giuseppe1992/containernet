@@ -23,7 +23,7 @@ cpu_set=(2, 3)
 for i in range(2,n_hosts+1):
     docker_hosts.append(net.addDocker('d{}'.format(i), ip='10.0.0.{}'.format(i),
                                       dimage="worker:latest",cpuset_cpus="{},{}".format(cpu_set[0],cpu_set[1]),
-                                      mem_limit="6500m", memswap_limit="0m"))
+                                      mem_limit="6500m", memswap_limit="500m"))
     switches.append(net.addSwitch('s{}'.format(i)))
     net.addLink(docker_hosts[-1], switches[-1])
     cpu_set = cpu_set[0]+2,cpu_set[1]+2
@@ -54,7 +54,6 @@ for w in workers:
 
 for wor in workers:
     wor.cmd("""bash -c "echo localhost >> /root/hadoop-2.7.6/etc/hadoop/slaves" """.format(ip))
-
     for ip in w_ips:
         if ip != wor.IP():
             wor.cmd("""bash -c "echo '{}' >> /root/hadoop-2.7.6/etc/hadoop/slaves" """.format(ip))
@@ -73,7 +72,7 @@ info ("# Create a directory for the user\n")
 info (master.cmd('bash -c "/root/hadoop-2.7.6/bin/hdfs dfs -mkdir -p /user/root"'))
 sleep(1)
 pi_cmd="/root/hadoop-2.7.6/bin/hadoop jar  /root/hadoop-2.7.6/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.6.jar pi 20 100"
-info (master.cmd(pi_cmd))
+#info (master.cmd(pi_cmd))
 info('*** Running CLI\n')
 CLI(net)
 info('*** Stopping network')
