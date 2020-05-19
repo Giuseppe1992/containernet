@@ -22,7 +22,8 @@ net.addLink(docker_hosts[-1], switches[-1])
 cpu_set=(2, 3)
 for i in range(2,n_hosts+1):
     docker_hosts.append(net.addDocker('d{}'.format(i), ip='10.0.0.{}'.format(i),
-                                      dimage="worker:latest",cpuset_cpus="{},{}".format(cpu_set[0],cpu_set[1])))
+                                      dimage="worker:latest",cpuset_cpus="{},{}".format(cpu_set[0],cpu_set[1]),
+                                      mem_limit="6500m", memswap_limit="0m"))
     switches.append(net.addSwitch('s{}'.format(i)))
     net.addLink(docker_hosts[-1], switches[-1])
     cpu_set = cpu_set[0]+2,cpu_set[1]+2
