@@ -49,7 +49,8 @@ for host in docker_hosts:
 for w in workers:
     ip = w.IP()
     master.cmd("""bash -c "echo '{}' >> /root/hadoop-2.7.6/etc/hadoop/slaves" """.format(ip))
-    w.cmd("""bash -c "echo '{}' >> /root/hadoop-2.7.6/etc/hadoop/slaves" """.format(ip))
+    for wor in workers:
+        wor.cmd("""bash -c "echo '{}' >> /root/hadoop-2.7.6/etc/hadoop/slaves" """.format(ip))
 
 info ("# Start Hadoop in the cluster\n")
 info ("# Format HDFS\n")
@@ -64,7 +65,8 @@ sleep(2)
 info ("# Create a directory for the user\n")
 info (master.cmd('bash -c "/root/hadoop-2.7.6/bin/hdfs dfs -mkdir -p /user/root"'))
 sleep(1)
-
+pi_cmd="/root/hadoop-2.7.6/bin/hadoop jar  /root/hadoop-2.7.6/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.6.jar pi 20 100"
+info (master.cmd(pi_cmd))
 info('*** Running CLI\n')
 CLI(net)
 info('*** Stopping network')
