@@ -9,7 +9,7 @@ from mininet.link import TCLink
 from mininet.log import info, setLogLevel
 from time import sleep
 setLogLevel('info')
-n_hosts=10
+n_hosts=3
 assert n_hosts > 1
 net = Containernet(controller=Controller)
 info('*** Adding controller\n')
@@ -41,7 +41,7 @@ master = docker_hosts[0]
 workers = docker_hosts[1:]
 
 #   StrictHostKeyChecking no
-master.cmd("""bash -c "echo '10.0.0.1' >> /root/hadoop-2.7.6/etc/hadoop/masters" """)
+master.cmd("""bash -c "echo '10.0.0.1' >> /usr/local/hadoop/etc/hadoop/masters" """)
 for host in docker_hosts:
     host.cmd("""bash -c "echo '    StrictHostKeyChecking no' >> /etc/ssh/ssh_config" """)
     host.cmd("service ssh start")
