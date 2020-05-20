@@ -23,7 +23,7 @@ cpu_set=(2, 3)
 for i in range(2,n_hosts+1):
     docker_hosts.append(net.addDocker('d{}'.format(i), ip='10.0.0.{}'.format(i),
                                       dimage="worker:latest",cpuset_cpus="{},{}".format(cpu_set[0],cpu_set[1]),
-                                      mem_limit="6500m", memswap_limit="500m"))
+                                      mem_limit="6500m", memswap_limit="50m"))
     switches.append(net.addSwitch('s{}'.format(i)))
     net.addLink(docker_hosts[-1], switches[-1])
     cpu_set = cpu_set[0]+2,cpu_set[1]+2
@@ -41,13 +41,28 @@ master = docker_hosts[0]
 workers = docker_hosts[1:]
 
 #   StrictHostKeyChecking no
-master.cmd("""bash -c "echo '    StrictHostKeyChecking no' >> /etc/ssh/ssh_config" """)
 master.cmd("""bash -c "echo '10.0.0.1' >> /root/hadoop-2.7.6/etc/hadoop/masters" """)
 for host in docker_hosts:
+    host.cmd("""bash -c "echo '    StrictHostKeyChecking no' >> /etc/ssh/ssh_config" """)
     host.cmd("service ssh start")
     host.cmd("""bash -c "echo '10.0.0.1 master ' >> /etc/hosts" """)
+    host.cmd("""bash -c "echo '10.0.0.1 hadoop-master ' >> /etc/hosts" """)
 
 
+w_ips=[]
+for w in workers:
+    ip = w.IP()
+    w_ips.append(ip)
+    master.cmd("""bash -c "echo '{}' >> /usr/local/hadoop/etc/hadoop/slaves" """.format(ip))
+
+for wor in workers:
+    for ip in w_ips:
+        wor.cmd("""bash -c "echo '{}' >> /usr/local/hadoop/etc/hadoop/slaves" """.format(ip))
+
+
+
+
+'''
 w_ips=[]
 for w in workers:
     ip = w.IP()
@@ -57,6 +72,7 @@ for w in workers:
 for wor in workers:
     for ip in w_ips:
         wor.cmd("""bash -c "echo '{}' >> /root/hadoop-2.7.6/etc/hadoop/slaves" """.format(ip))
+
 
 info ("# Start Hadoop in the cluster\n")
 info ("# Format HDFS\n")
@@ -77,4 +93,4 @@ info('*** Running CLI\n')
 CLI(net)
 info('*** Stopping network')
 net.stop()
-
+'''
