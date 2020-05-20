@@ -59,6 +59,21 @@ for wor in workers:
     for ip in w_ips:
         wor.cmd("""bash -c "echo '{}' >> /usr/local/hadoop/etc/hadoop/slaves" """.format(ip))
 
+info ("# Start Hadoop in the cluster\n")
+info ("# Format HDFS\n")
+info (master.cmd('bash -c "/usr/local/hadoop/bin/hdfs namenode -format -force"'))
+sleep(2)
+info ("# Launch HDFS\n")
+info (master.cmd('bash -c "/usr/local/hadoop/sbin/start-dfs.sh"'))
+sleep(2)
+info ("# Launch YARN\n")
+info (master.cmd('bash -c "/usr/local/hadoop/sbin/start-yarn.sh"'))
+sleep(2)
+info ("# Create a directory for the user\n")
+info (master.cmd('bash -c "/usr/local/hadoop/bin/hdfs dfs -mkdir -p /user/root"'))
+sleep(1)
+
+
 info('*** Running CLI\n')
 CLI(net)
 info('*** Stopping network')
