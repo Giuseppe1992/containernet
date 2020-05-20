@@ -9,7 +9,7 @@ from mininet.link import TCLink
 from mininet.log import info, setLogLevel
 from time import sleep
 setLogLevel('info')
-n_hosts=3
+n_hosts=10
 assert n_hosts > 1
 net = Containernet(controller=Controller)
 info('*** Adding controller\n')
@@ -78,7 +78,9 @@ info (master.cmd('bash -c "/usr/local/hadoop/sbin/start-yarn.sh"'))
 sleep(2)
 info ("# Create a directory for the user\n")
 info (master.cmd('bash -c "/usr/local/hadoop/bin/hdfs dfs -mkdir -p /user/root"'))
-sleep(1)
+sleep(2)
+pi_cmd="hadoop jar /usr/local/hadoop/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.2.jar pi  400 400"
+info (master.cmd(pi_cmd))
 
 
 info('*** Running CLI\n')
