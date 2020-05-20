@@ -68,18 +68,9 @@
         - notindocker
         - nopull
 
-   - name: download docker recepies
-     get_url:
-        url : http://public.nancy.grid5000.fr/~gidilena/zip.zip
-        dest: ~/zip.zip
-        mode: 0666
 
-   - name: unzip the images
-     raw: unzip  ~/zip.zip -d /root/
-
-   - name: build master
-     raw: docker build -t master:latest /root/zip/DockerMaster/
-
-   - name: build worker
-     raw: docker build -t worker:latest /root/zip/DockerWorker/
+   - name: download 'ubuntu' docker image for Containernet example
+     shell: docker build -t hadoop:new .
+     args:
+       chdir: /root/hadoop-cluster-docker
 
