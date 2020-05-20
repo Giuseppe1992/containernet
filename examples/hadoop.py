@@ -3,7 +3,7 @@
 This is the most simple example to showcase Containernet.
 """
 from mininet.net import Containernet
-from mininet.node import Controller
+from mininet.node import Controller,RemoteController
 from mininet.cli import CLI
 from mininet.link import TCLink
 from mininet.log import info, setLogLevel
@@ -65,6 +65,9 @@ for wor in docker_hosts:
         wor.cmd("""bash -c "echo '{} {}' >> /etc/hosts" """.format(w.IP(), w))
 
         wor.cmd("""bash -c "echo '{}' >> /usr/local/hadoop/etc/hadoop/slaves" """.format(w))
+
+info ("# DO PINGALL\n")
+info (net.pingAllFull())
 
 info ("# Start Hadoop in the cluster\n")
 info ("# Format HDFS\n")
