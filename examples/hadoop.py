@@ -16,7 +16,7 @@ info('*** Adding controller\n')
 net.addController('c0')
 info('*** Adding docker containers\n')
 
-docker_hosts=[net.addDocker('d1', ip='10.0.0.1', dimage="hadoop:new",cpuset_cpus="0,1")]
+docker_hosts=[net.addDocker('d1', ip='10.0.0.1', dimage="hadoop:new",cpuset_cpus="0,1",ports=[8088, 50070], port_bindings={8088:8088,50070:50070},)]
 switches = [net.addSwitch('s1')]
 net.addLink(docker_hosts[-1], switches[-1])
 cpu_set=(2, 3)
