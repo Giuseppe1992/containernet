@@ -59,7 +59,7 @@ for w in workers:
 #    for ip in w_ips:
 #        wor.cmd("""bash -c "echo '{}' >> /usr/local/hadoop/etc/hadoop/slaves" """.format(w))
 
-for wor in workers:
+for wor in docker_hosts:
     wor.cmd("""bash -c "echo '10.0.0.1  d1' >> /etc/hosts" """.format(w))
     for w in workers:
         wor.cmd("""bash -c "echo '{} {}' >> /etc/hosts" """.format(w.IP(), w))
