@@ -53,11 +53,18 @@ w_ips=[]
 for w in workers:
     ip = w.IP()
     w_ips.append(ip)
-    master.cmd("""bash -c "echo '{}' >> /usr/local/hadoop/etc/hadoop/slaves" """.format(ip))
+    master.cmd("""bash -c "echo '{}' >> /usr/local/hadoop/etc/hadoop/slaves" """.format(w))
+
+#for wor in workers:
+#    for ip in w_ips:
+#        wor.cmd("""bash -c "echo '{}' >> /usr/local/hadoop/etc/hadoop/slaves" """.format(w))
 
 for wor in workers:
-    for ip in w_ips:
-        wor.cmd("""bash -c "echo '{}' >> /usr/local/hadoop/etc/hadoop/slaves" """.format(ip))
+    wor.cmd("""bash -c "echo '10.0.0.1  d1' >> /etc/hosts" """.format(w))
+    for w in workers:
+        wor.cmd("""bash -c "echo '{} {}' >> /etc/hosts" """.format(w.IP(), w))
+
+        wor.cmd("""bash -c "echo '{}' >> /usr/local/hadoop/etc/hadoop/slaves" """.format(w))
 
 info ("# Start Hadoop in the cluster\n")
 info ("# Format HDFS\n")
