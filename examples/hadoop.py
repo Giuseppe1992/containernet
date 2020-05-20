@@ -59,7 +59,10 @@ for wor in workers:
     for ip in w_ips:
         wor.cmd("""bash -c "echo '{}' >> /usr/local/hadoop/etc/hadoop/slaves" """.format(ip))
 
-
+info('*** Running CLI\n')
+CLI(net)
+info('*** Stopping network')
+net.stop()
 
 
 '''
