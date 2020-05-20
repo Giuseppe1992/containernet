@@ -9,7 +9,7 @@ from mininet.link import TCLink
 from mininet.log import info, setLogLevel
 from time import sleep
 setLogLevel('info')
-n_hosts=10
+n_hosts=30
 assert n_hosts > 1
 net = Containernet(controller=Controller)
 info('*** Adding controller\n')
