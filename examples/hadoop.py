@@ -68,7 +68,7 @@ for wor in docker_hosts:
         wor.cmd("""bash -c "echo '{}' >> /usr/local/hadoop/etc/hadoop/slaves" """.format(w))
 
 info ("# DO PINGALL\n")
-info (net.pingAllFull())
+net.pingAllFull()
 
 info ("# Start Hadoop in the cluster\n")
 info ("# Format HDFS\n")
@@ -88,7 +88,7 @@ info (master.cmd(pi_cmd))
 
 
 info('*** Running CLI\n')
-CLI(net)
+#CLI(net)
 info('*** Stopping network')
 net.stop()
 
